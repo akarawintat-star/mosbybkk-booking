@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosby BKK — Reserve a Table</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D0B09;
+    --gold: #B8965A;
+    --gold-light: #D4AF7A;
+    --cream: #FAF7F2;
+    --warm-gray: #6B6560;
+    --border: rgba(184,150,90,0.25);
+    --surface: rgba(255,255,255,0.6);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+  }
+
+  .hero-left {
+    background: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(184,150,90,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(184,150,90,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-tag::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 5vw, 80px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold-light);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(250,247,242,0.45);
+    margin-top: 20px;
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  .hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(250,247,242,0.6);
+  }
+
+  .info-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .hero-divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(184,150,90,0.4), transparent);
+    margin: 40px 0;
+    position: relative;
+  }
+
+  /* FORM SIDE */
+  .hero-right {
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 50px;
+    position: relative;
+  }
+
+  .form-header {
+    margin-bottom: 36px;
+  }
+
+  .form-label-tag {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-label-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .form-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* FORM ELEMENTS */
+  .booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8965A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,150,90,0.08);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: #C5BEB6;
+    font-weight: 300;
+  }
+
+  .form-group textarea {
+    resize: none;
+    height: 80px;
+    line-height: 1.6;
+  }
+
+  /* OCCASION PILLS */
+  .occasion-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .occasion-group label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+  }
+
+  .pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--warm-gray);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    user-select: none;
+  }
+
+  .pill:hover { border-color: var(--gold); color: var(--gold); }
+  .pill.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--cream);
+  }
+
+  /* SUBMIT BUTTON */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+
+  .submit-btn:hover::before { transform: translateX(0); }
+  .submit-btn span { position: relative; z-index: 1; }
+
+  .submit-btn:active { transform: scale(0.99); }
+
+  /* SUCCESS STATE */
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,11,9,0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .success-overlay.show { display: flex; }
+
+  .success-card {
+    background: var(--cream);
+    padding: 60px 50px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    border-radius: 2px;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: var(--gold);
+    font-size: 22px;
+  }
+
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .success-desc {
+    font-size: 13px;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .success-close {
+    padding: 12px 32px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .success-close:hover { background: var(--gold); }
+
+  /* NOTICE */
+  .form-notice {
+    font-size: 11px;
+    color: var(--warm-gray);
+    text-align: center;
+    line-height: 1.6;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 32px 40px; min-height: 40vh; }
+    .hero-right { padding: 40px 24px 60px; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-title { font-size: 48px; }
+  }
+
+  /* FADE IN ANIMATION */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .fade-up:nth-child(1) { animation-delay: 0.1s; }
+  .fade-up:nth-child(2) { animation-delay: 0.2s; }
+  .fade-up:nth-child(3) { animation-delay: 0.3s; }
+  .fade-up:nth-child(4) { animation-delay: 0.35s; }
+  .fade-up:nth-child(5) { animation-delay: 0.4s; }
+  .fade-up:nth-child(6) { animation-delay: 0.45s; }
+  .fade-up:nth-child(7) { animation-delay: 0.5s; }
+  .fade-up:nth-child(8) { animation-delay: 0.55s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <!-- LEFT: BRAND INFO -->
+  <div class="hero-left">
+    <div class="brand-tag">Bangkok · Fine Casual</div>
+    <h1 class="hero-title">
+      Mosby<br><em>BKK</em>
+    </h1>
+    <p class="hero-sub">Good Steak · Nice Pasta<br>Easy Wine</p>
+
+    <div class="hero-divider"></div>
+
+    <div class="hero-info">
+      <div class="info-row"><span class="info-dot"></span> เปิดทุกวัน อังคาร – อาทิตย์</div>
+      <div class="info-row"><span class="info-dot"></span> 12:00 – 22:00 น.</div>
+      <div class="info-row"><span class="info-dot"></span> โทร. 089-180-8777</div>
+      <div class="info-row"><span class="info-dot"></span> LINE: @MOSBYBKK</div>
+      <div class="info-row"><span class="info-dot"></span> กรุณาจองล่วงหน้าอย่างน้อย 1 ชั่วโมง</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: BOOKING FORM -->
+  <div class="hero-right">
+    <div class="form-header">
+      <div class="form-label-tag">Reservation</div>
+      <h2 class="form-title">จองโต๊ะ<br><em>Reserve a Table</em></h2>
+    </div>
+
+    <form class="booking-form" id="bookingForm">
+
+      <div class="form-row fade-up">
+        <div class="form-group">
+          <label>ชื่อ · Name</label>
+          <input type="text" id="name" placeholder="ชื่อ-นามสกุล" required>
+        </div>
+        <div class="form-group">
+          <label>เบอร์โทร · Phone</label>
+          <input type="tel" id="phone" placeholder="089-XXX-XXXX" required>
+        </div>
+      </div>
+
+      <div class="form-row fade-up">
+        <div class="form-group">
+          <label>วันที่ · Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="form-group">
+          <label>เวลา · Time</label>
+          <select id="time" required>
+            <option value="" disabled selected>เลือกเวลา</option>
+            <option>12:00</option>
+            <option>12:30</option>
+            <option>13:00</option>
+            <option>13:30</option>
+            <option>14:00</option>
+            <option>14:30</option>
+            <option>15:00</option>
+            <option>17:00</option>
+            <option>17:30</option>
+            <option>18:00</option>
+            <option>18:30</option>
+            <option>19:00</option>
+            <option>19:30</option>
+            <option>20:00</option>
+            <option>20:30</option>
+            <option>21:00</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group fade-up">
+        <label>จำนวนคน · Guests</label>
+        <select id="guests" required>
+          <option value="" disabled selected>เลือกจำนวนคน</option>
+          <option value="1">1 คน</option>
+          <option value="2">2 คน</option>
+          <option value="3">3 คน</option>
+          <option value="4">4 คน</option>
+          <option value="5">5 คน</option>
+          <option value="6">6 คน</option>
+          <option value="7+">7 คนขึ้นไป (กรุณาโทรติดต่อ)</option>
+        </select>
+      </div>
+
+      <div class="occasion-group fade-up">
+        <label>โอกาสพิเศษ · Occasion (ถ้ามี)</label>
+        <div class="pills" id="occasionPills">
+          <div class="pill" onclick="togglePill(this)">🎂 วันเกิด</div>
+          <div class="pill" onclick="togglePill(this)">💍 Anniversary</div>
+          <div class="pill" onclick="togglePill(this)">🥂 Date Night</div>
+          <div class="pill" onclick="togglePill(this)">👥 Business</div>
+          <div class="pill" onclick="togglePill(this)">🎉 Celebration</div>
+        </div>
+      </div>
+
+      <div class="form-group fade-up">
+        <label>หมายเหตุ · Special Request</label>
+        <textarea id="note" placeholder="แพ้อาหาร, ที่นั่งพิเศษ, ฯลฯ"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn fade-up">
+        <span>ยืนยันการจอง · Confirm Reservation</span>
+      </button>
+
+      <p class="form-notice fade-up">
+        ทางร้านจะติดต่อกลับเพื่อยืนยันการจองภายใน 30 นาที<br>
+        หากไม่ได้รับการติดต่อ กรุณาโทร 089-180-8777
+      </p>
+
+    </form>
+  </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h3 class="success-title">ขอบคุณครับ</h3>
+    <p class="success-desc" id="successDesc">
+      ได้รับการจองเรียบร้อยแล้ว<br>
+      ทางร้านจะติดต่อกลับเพื่อยืนยัน<br>
+      ภายใน 30 นาทีครับ
+    </p>
+    <button class="success-close" onclick="closeSuccess()">กลับหน้าหลัก</button>
+  </div>
+</div>
+
+<script>
+  // Set min date to today
+  const dateInput = document.getElementById('date');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.min = today;
+
+  // Occasion pills
+  let selectedOccasion = '';
+  function togglePill(el) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    if (selectedOccasion === el.textContent) {
+      selectedOccasion = '';
+    } else {
+      el.classList.add('active');
+      selectedOccasion = el.textContent;
+    }
+  }
+
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzptqr5rl-WQItyqx69z6hQq7QidmQAhRpIyg4iZDABGxwAb9NmS270aGUMKMD_IJef/exec';
+
+  document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name     = document.getElementById('name').value;
+    const phone    = document.getElementById('phone').value;
+    const date     = document.getElementById('date').value;
+    const time     = document.getElementById('time').value;
+    const guests   = document.getElementById('guests').value;
+    const note     = document.getElementById('note').value;
+
+    const payload = JSON.stringify({ name, phone, date, time, guests, occasion: selectedOccasion, note });
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      });
+    } catch (err) {
+      console.log('submitted');
+    }
+
+    showSuccess(name, date, time, guests);
+  });
+
+  function showSuccess(name, date, time, guests) {
+    const d = new Date(date);
+    const dateStr = d.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('successDesc').innerHTML =
+      `<strong>${name}</strong><br>วันที่ ${dateStr}<br>เวลา ${time} น. · ${guests} ท่าน<br><br>ทางร้านจะติดต่อกลับเพื่อยืนยันภายใน 30 นาทีครับ`;
+    document.getElementById('successOverlay').classList.add('show');
+    document.getElementById('bookingForm').reset();
+    selectedOccasion = '';
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  }
+
+  function closeSuccess() {
+    document.getElementById('successOverlay').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
