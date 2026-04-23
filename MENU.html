@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosby BKK — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --dark: #1A1612;
+    --gold: #C8A96E;
+    --warm: #8B6F47;
+    --light-warm: #E8DDD0;
+    --muted: #7A6F65;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--dark);
+    color: var(--cream);
+    padding: 60px 32px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(200,169,110,0.18) 0%, transparent 70%);
+  }
+  .hero-label {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 8vw, 64px);
+    font-weight: 400;
+    line-height: 1.1;
+    position: relative;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-tagline {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    margin-top: 20px;
+    position: relative;
+  }
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto 0;
+    position: relative;
+  }
+
+  /* INFO BAR */
+  .info-bar {
+    background: var(--gold);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+  .info-icon { font-size: 14px; }
+
+  /* NOTICE */
+  .notice {
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--light-warm);
+    text-transform: uppercase;
+  }
+
+  /* MENU CONTAINER */
+  .menu-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* CATEGORY */
+  .category {
+    margin-top: 48px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .category:nth-child(1) { animation-delay: 0.05s; }
+  .category:nth-child(2) { animation-delay: 0.1s; }
+  .category:nth-child(3) { animation-delay: 0.15s; }
+  .category:nth-child(4) { animation-delay: 0.2s; }
+  .category:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .category-header::before,
+  .category-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--light-warm);
+  }
+  .category-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--warm);
+    white-space: nowrap;
+  }
+
+  /* MENU ITEM */
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(232,221,208,0.6);
+    position: relative;
+  }
+  .menu-item:last-child { border-bottom: none; }
+
+  .item-info { flex: 1; }
+  .item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--dark);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .item-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+  .item-badge {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(200,169,110,0.12);
+    border: 1px solid rgba(200,169,110,0.3);
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--warm);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .item-price span {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-right: 2px;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--dark);
+    color: rgba(245,240,232,0.5);
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .footer p {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 2;
+  }
+  .footer a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Bangkok · Mosby BKK</div>
+  <h1>Good Steak<br>Nice Pasta<br><em>Easy Wine</em></h1>
+  <p class="hero-tagline">All-day dining · Modern European</p>
+  <div class="hero-divider"></div>
+</div>
+
+<!-- INFO BAR -->
+<div class="info-bar">
+  <div class="info-item"><span class="info-icon">🕐</span> Tue–Sun · 12:00–22:00</div>
+  <div class="info-item"><span class="info-icon">📞</span> 089-180-8777</div>
+  <div class="info-item"><span class="info-icon">💬</span> LINE: @MOSBYBKK</div>
+</div>
+
+<!-- NOTICE -->
+<div class="notice">✦ All prices are inclusive of tax · No additional VAT or service charge ✦</div>
+
+<!-- MENU -->
+<div class="menu-container">
+
+  <!-- STARTERS & SPREADS -->
+  <div class="category">
+    <div class="category-header"><span class="category-title">Starters & Spreads</span></div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Chicken Parfait</div>
+        <div class="item-desc">Chicken liver, orange gel, served with toasted brioche</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Signature</div>
+        <div class="item-name">Mentaiko Spread</div>
+        <div class="item-desc">Mentaiko, cream cheese, mascarpone, toasted brioche</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Burrata Caprese</div>
+        <div class="item-desc">Burrata, sundried tomato, cherry tomato, tomato dressing, basil oil</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Red Prawn Toasts</div>
+        <div class="item-desc">Red prawn, toasted brioche, fish roe</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Fries · Mushroom Honey Glaze</div>
+        <div class="item-desc">Mushroom, truffle glaze, mayo</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Corn Fried</div>
+        <div class="item-desc">Corn rib, cheese, spicy mayo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALADS & CRUDO -->
+  <div class="category">
+    <div class="category-header"><span class="category-title">Salads & Crudo</span></div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Hamachi Ceviche</div>
+        <div class="item-desc">Hamachi, fish roe, orange tiger milk, dill oil</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Smoky Eggplant Salad with River Prawn</div>
+        <div class="item-desc">Grilled eggplant, river prawn, ricotta cheese, walnut, black garlic aioli</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Seared Scallop Crudo</div>
+        <div class="item-desc">Seared scallops, fish roe, orange tiger milk, dill oil</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Caesar Salad</div>
+        <div class="item-desc">Baby cos, egg, toast, bacon, black Caesar dressing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASTA & RISOTTO -->
+  <div class="category">
+    <div class="category-header"><span class="category-title">Pasta & Risotto</span></div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Classic Carbonara</div>
+        <div class="item-desc">Egg, homemade bacon, pepper, parmesan cheese</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Mentaiko Pasta</div>
+        <div class="item-desc">Japanese mentaiko, buttery cream sauce, spicy salted fish roe</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Capellini con Granchio e Crema di Peperoni Gialli</div>
+        <div class="item-desc">Crab meat, salmon roe, yellow pepper cream, basil oil</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Capellini con Bisque di Gamberi</div>
+        <div class="item-desc">Red prawn, seafood bisque, parmesan, basil oil</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Pomodoro with BBQ Pork</div>
+        <div class="item-desc">BBQ pork ribs, tomato sauce, pickle chilli, tomato peel</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Red Prawn Corn Curry Risotto</div>
+        <div class="item-desc">Red prawn, salmon roe, sundried tomato, corn curry paste</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Risotto alla Napoletana with Beef Hamburg</div>
+        <div class="item-desc">Beef hamburg, risotto, sundried tomato, tomato sauce</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAINS -->
+  <div class="category">
+    <div class="category-header"><span class="category-title">Mains</span></div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Pork Banger</div>
+        <div class="item-desc">Pork sausage, mashed potato, onion gravy, rocket, pickle cabbage</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Marshall's Favorite Burger</div>
+        <div class="item-desc">"How I Met Your Mother" — Bun, beef patty, American cheese, caramelized onion, pickle, tomato, bacon</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Grill Salmon · Pea Purée · Lemon Velouté</div>
+        <div class="item-desc">Salmon, salmon roe, pea purée, black garlic aioli, lemon velouté, snap pea</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Pork Cordon Bleu</div>
+        <div class="item-desc">Pork loin, ham, cheddar cheese, mashed potato, mustard gravy, pickled red cabbage</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-name">Classic Deep Fried Red Snapper</div>
+        <div class="item-desc">Served with french fries, green pea</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEAKS -->
+  <div class="category">
+    <div class="category-header"><span class="category-title">Steaks</span></div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Roast Picanha</div>
+        <div class="item-desc">Roast picanha beef, mash potatoes, red wine sauce, fries, corn polenta</div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="item-info">
+        <div class="item-badge">★ Recommended</div>
+        <div class="item-name">Slow-Roasted Ribeye with Red Wine Jus</div>
+        <div class="item-desc">Roast ribeye beef, mash potatoes, red wine sauce, gremolata</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end menu-container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">Mosby BKK</div>
+  <p>Open Tue–Sun · 12:00–22:00</p>
+  <p>📞 <a href="tel:0891808777">089-180-8777</a> &nbsp;·&nbsp; 💬 <a href="https://line.me/ti/p/@mosbybkk" target="_blank">@MOSBYBKK</a></p>
+  <p style="margin-top:16px; font-size:10px; opacity:0.4; letter-spacing:2px;">ALL PRICES INCLUSIVE OF TAX · NO SERVICE CHARGE</p>
+</div>
+
+</body>
+</html>
